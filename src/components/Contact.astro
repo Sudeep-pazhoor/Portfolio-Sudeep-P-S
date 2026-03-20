@@ -1,0 +1,99 @@
+---
+import { portfolioData } from '../data/portfolio';
+---
+<section id="contact" class="contact">
+  <div class="container">
+    <h2 class="text-h2 mb-lg">Let's work together.</h2>
+    <p class="text-muted mb-xl" style="font-size: clamp(1.2rem, 3vw, 1.5rem); max-width: 600px; text-align: justify;">
+      Currently seeking opportunities to contribute to innovative projects and grow as a developer.
+    </p>
+    
+    <div class="contact-links pb-xl border-bottom">
+      <a href={`mailto:${portfolioData.email}`} class="text-title email-link">{portfolioData.email}</a>
+    </div>
+    
+    <div class="footer mt-lg">
+      <p class="text-muted">© {new Date().getFullYear()} {portfolioData.name}</p>
+      <div class="socials">
+        <a href={portfolioData.github} target="_blank" rel="noopener" aria-label="GitHub">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+          </svg>
+        </a>
+        <a href={`mailto:${portfolioData.email}`} aria-label="Email">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+        </a>
+        <a href={portfolioData.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+            <rect x="2" y="9" width="4" height="12"></rect>
+            <circle cx="4" cy="4" r="2"></circle>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    min-height: 80vh;
+    justify-content: flex-end;
+  }
+  @media (max-width: 768px) {
+    .contact {
+      min-height: auto;
+      padding-top: var(--spacing-md);
+      justify-content: flex-start;
+    }
+  }
+  .email-link {
+    font-size: clamp(1.5rem, 5vw, 4rem);
+    display: inline-block;
+    position: relative;
+    word-break: break-all;
+  }
+  .email-link::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--text-color);
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease;
+  }
+  .email-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+  .border-bottom {
+    border-bottom: 1px solid var(--border-color);
+  }
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+  }
+  .socials {
+    display: flex;
+    gap: var(--spacing-md);
+  }
+  .socials a {
+    color: var(--text-color);
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  .socials a:hover {
+    transform: translateY(-3px);
+    opacity: 0.8;
+  }
+  .pb-xl { padding-bottom: var(--spacing-xl); }
+</style>

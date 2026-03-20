@@ -1,0 +1,141 @@
+---
+import { portfolioData } from '../data/portfolio';
+---
+<section id="projects" class="projects">
+  <div class="container">
+    <h2 class="text-h2 mb-xl projects-heading">Selected<br/>Works.</h2>
+    <div class="projects-list">
+      {portfolioData.projects.map((project, index) => (
+        <div class={`project-row ${index % 2 === 0 ? 'reverse' : ''}`}>
+          <div class="project-content">
+            <h3 class="text-h2 mb-sm">
+              {project.title}
+              {project.subtitle && <span style="display: block; font-size: clamp(1rem, 2vw, 1.5rem); color: var(--text-muted); font-weight: 400; margin-top: 0.2rem;">{project.subtitle}</span>}
+            </h3>
+            <p class="text-muted mb-lg title-desc">{project.description}</p>
+            <div class="tech-stack mb-lg">
+              {project.techStack.map(tech => <span class="pill">{tech}</span>)}
+            </div>
+            <a href={project.link || '#'} target={project.link ? "_blank" : "_self"} rel="noopener noreferrer" class="btn btn-primary" aria-label={`View ${project.title}`}>VIEW WORK</a>
+          </div>
+          <div class="project-image-wrapper">
+            <div class="project-image">
+              <img src={`/${project.image || project.title + '.jpg'}`} alt={`${project.title} Preview`} loading="lazy" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2xl);
+  }
+  .project-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .project-row {
+      grid-template-columns: 1fr 1fr;
+      gap: 5vw;
+    }
+    .project-row.reverse .project-content {
+      order: 2;
+    }
+    .project-row.reverse .project-image-wrapper {
+      order: 1;
+    }
+  }
+  .project-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .title-desc {
+    font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+    text-align: justify;
+    line-height: 1.8;
+  }
+  .project-image-wrapper {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+    background: transparent;
+  }
+  .project-image {
+    width: 100%;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+  }
+  .project-image img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+  .project-row:hover .project-image {
+    transform: scale(1.05);
+  }
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.75rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: var(--text-color);
+    color: var(--bg-color);
+    border: 1px solid var(--text-color);
+  }
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--text-color);
+  }
+  .tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import ScrollTrigger from 'gsap/ScrollTrigger';
+  
+  gsap.registerPlugin(ScrollTrigger);
+  
+  gsap.from('.projects-heading', {
+    scrollTrigger: {
+      trigger: '.projects',
+      start: 'top 80%',
+    },
+    y: 30,
+    opacity: 0,
+    duration: 1
+  });
+
+  gsap.utils.toArray('.project-row').forEach((row: any) => {
+    gsap.from(row, {
+      scrollTrigger: {
+        trigger: row,
+        start: 'top 85%',
+      },
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power2.out'
+    });
+  });
+</script>

@@ -1,0 +1,169 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import Contact from '../components/Contact.astro';
+import { portfolioData } from '../data/portfolio';
+---
+
+<Layout title={`${portfolioData.name} | Contact`}>
+  <Navigation />
+  <main class="contact-page-main">
+    <div class="container grid grid-2">
+      <div>
+        <h1 class="text-title mb-md">Say Hello.</h1>
+        <p class="text-muted" style="font-size: clamp(1.2rem, 3vw, 1.5rem); max-width: 400px; text-align: justify;">
+          I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.
+        </p>
+      </div>
+      
+      <form class="contact-form" id="contact-form">
+        <div class="form-group mb-md">
+          <label for="name" class="sr-only">Name</label>
+          <input type="text" id="name" name="name" placeholder="Your Name" required />
+        </div>
+        
+        <div class="form-group mb-md">
+          <label for="email" class="sr-only">Email</label>
+          <input type="email" id="email" name="email" placeholder="Your Email" required pattern="[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}" title="Please enter a valid email address." />
+        </div>
+        
+        <div class="form-group mb-lg">
+          <label for="message" class="sr-only">Message</label>
+          <textarea id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
+        </div>
+        
+        <button type="submit" class="submit-btn text-h3" id="submit-btn">
+          <span class="submit-text">Send Message &rarr;</span>
+        </button>
+      </form>
+    </div>
+  </main>
+  <Contact />
+</Layout>
+
+<style>
+  .contact-page-main {
+    padding-top: 15vh;
+    min-height: 70vh;
+  }
+  @media (max-width: 768px) {
+    .contact-page-main {
+      min-height: auto;
+      padding-top: 10vh;
+      padding-bottom: 2rem;
+    }
+    .contact-form {
+      align-items: center;
+    }
+    .contact-form input, .contact-form textarea {
+      text-align: center;
+    }
+    .submit-btn {
+      margin: 0 auto;
+    }
+    .text-title, .text-muted {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--spacing-md);
+  }
+  
+  input, textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--border-color);
+    padding: var(--spacing-md) 0;
+    color: var(--text-color);
+    font-family: var(--font-primary);
+    font-size: 1.2rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+    resize: vertical;
+  }
+  
+  input::placeholder, textarea::placeholder {
+    color: var(--text-muted);
+    opacity: 0.6;
+  }
+  
+  input:focus, textarea:focus {
+    border-color: var(--text-color);
+  }
+  
+  .submit-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    font-family: var(--font-primary);
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: var(--spacing-md) 0;
+    transition: opacity 0.3s ease;
+    width: fit-content;
+  }
+  
+  .submit-btn:hover {
+    opacity: 0.6;
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import emailjs from '@emailjs/browser';
+  
+  gsap.from('.contact-form', {
+    y: 30,
+    opacity: 0,
+    duration: 1,
+    delay: 0.2,
+    ease: 'power3.out'
+  });
+
+  const contactForm = document.getElementById('contact-form') as HTMLFormElement | null;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+  const submitText = submitBtn?.querySelector('.submit-text') as HTMLSpanElement | null;
+
+  if (contactForm) {
+    emailjs.init(import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY || '');
+    
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      if (submitBtn && submitText) {
+        submitBtn.disabled = true;
+        submitText.innerText = 'Sending...';
+        submitBtn.style.opacity = '0.5';
+      }
+
+      try {
+        await emailjs.sendForm(
+          import.meta.env.PUBLIC_EMAILJS_SERVICE_ID || '',
+          import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID || '',
+          contactForm,
+          import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY || ''
+        );
+        
+        alert('Message sent successfully!');
+        contactForm.reset();
+      } catch (error) {
+        console.error('Failed to send email:', error);
+        alert('Failed to send message. Please check your EmailJS configuration and try again.');
+      } finally {
+        if (submitBtn && submitText) {
+          submitBtn.disabled = false;
+          submitText.innerHTML = 'Send Message &rarr;';
+          submitBtn.style.opacity = '1';
+        }
+      }
+    });
+  }
+</script>

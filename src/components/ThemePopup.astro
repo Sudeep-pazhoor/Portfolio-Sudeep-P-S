@@ -1,0 +1,112 @@
+<div id="theme-popup" class="theme-popup" aria-hidden="true">
+  <div class="theme-popup-content">
+    <span class="theme-popup-text" id="theme-popup-text">Try Light Mode for a different look!</span>
+  </div>
+</div>
+
+<style>
+  .theme-popup {
+    position: fixed;
+    top: 4.8rem;
+    right: 4.5vw;
+    background: #194a96; /* Matches the nice blue from the screenshot */
+    color: #ffffff;
+    border: none;
+    border-radius: 10px; /* Slight rounded corners as in the image */
+    padding: 0.8rem 1rem;
+    max-width: 260px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+    z-index: 9999;
+    transform: translateY(10px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Triangle pointer pointing UP to the button */
+  .theme-popup::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 1.5rem;
+    width: 14px;
+    height: 14px;
+    background: #194a96;
+    transform: rotate(45deg);
+    border-radius: 2px;
+  }
+
+  .theme-popup.show {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto; /* Allow clicking */
+    cursor: pointer;
+  }
+
+  .theme-popup-content {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .theme-popup-text {
+    font-size: 0.95rem;
+    font-family: inherit;
+    font-weight: 600; /* Bolder text matching the screenshot */
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  @media (max-width: 768px) {
+    .theme-popup {
+      top: 4.5rem;
+      right: 5vw;
+    }
+  }
+</style>
+
+<script>
+  // Astro <script> tags run as modules implicitly (type="module"), 
+  // so DOMContentLoaded has ALREADY FIRED by the time this executes!
+  const initThemePopup = () => {
+    const popup = document.getElementById('theme-popup');
+    const popupText = document.getElementById('theme-popup-text');
+    const themeToggles = document.querySelectorAll('#theme-toggle, #theme-toggle-desktop');
+
+    // Update text based on current theme
+    const currentTheme = document.documentElement.getAttribute('data-theme') || localStorage.getItem('theme') || 'light';
+    if (popupText) {
+      popupText.innerText = currentTheme === 'dark' 
+        ? 'Try Light Mode for a different look!' 
+        : 'Try Dark Mode for a different look!';
+    }
+
+    const closePopup = () => {
+      popup?.classList.remove('show');
+      localStorage.setItem('theme-popup-seen-v4', 'true');
+    };
+
+    // Show popup
+    if (typeof localStorage !== 'undefined' && !localStorage.getItem('theme-popup-seen-v4')) {
+      setTimeout(() => {
+        if (popup) popup.classList.add('show');
+        
+        // Auto hide after 6 seconds
+        setTimeout(() => {
+          closePopup();
+        }, 6000);
+      }, 1000); // 1 second delay
+    }
+
+    // Dismiss on click anywhere on the popup
+    popup?.addEventListener('click', closePopup);
+    
+    // Hide popup if they click the actual theme toggle
+    themeToggles.forEach(btn => {
+      btn.addEventListener('click', closePopup);
+    });
+  };
+
+  // Run immediately instead of waiting for DOMContentLoaded
+  initThemePopup();
+</script>

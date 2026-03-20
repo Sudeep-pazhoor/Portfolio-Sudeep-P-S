@@ -1,0 +1,15 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import Projects from '../components/Projects.astro';
+import Contact from '../components/Contact.astro';
+import { portfolioData } from '../data/portfolio';
+---
+
+<Layout title={`${portfolioData.name} | Works`}>
+  <Navigation />
+  <main style="padding-top: 100px;">
+    <Projects />
+  </main>
+  <Contact />
+</Layout>

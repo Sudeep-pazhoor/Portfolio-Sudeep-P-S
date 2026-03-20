@@ -1,0 +1,83 @@
+---
+import { portfolioData } from '../data/portfolio';
+---
+<section id="experience" class="experience">
+  <div class="container">
+    <h2 class="text-h2 mb-xl experience-heading">Experience.</h2>
+    <div class="timeline">
+      {portfolioData.experience.map((exp, index) => (
+        <div class="timeline-item">
+          <div class="timeline-meta">
+            <span class="text-muted">{exp.duration}</span>
+          </div>
+          <div class="timeline-content">
+            <h3 class="text-h3">{exp.title}</h3>
+            <h4 class="text-muted mb-md">{exp.company} — {exp.location}</h4>
+            <ul>
+              {exp.description.map(desc => (
+                <li class="mb-sm text-muted">{desc}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+  }
+  @media (min-width: 768px) {
+    .timeline-item {
+      grid-template-columns: 300px 1fr;
+    }
+  }
+  ul {
+    list-style-position: outside;
+    padding-left: 1.2rem;
+  }
+  li {
+    text-align: justify;
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import ScrollTrigger from 'gsap/ScrollTrigger';
+  
+  gsap.registerPlugin(ScrollTrigger);
+  
+  gsap.from('.experience-heading', {
+    scrollTrigger: {
+      trigger: '.experience',
+      start: 'top 80%',
+    },
+    y: 30,
+    opacity: 0,
+    duration: 1
+  });
+
+  gsap.utils.toArray('.timeline-item').forEach((item: any) => {
+    gsap.from(item, {
+      scrollTrigger: {
+        trigger: item,
+        start: 'top 85%',
+      },
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power2.out'
+    });
+  });
+</script>

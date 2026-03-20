@@ -1,0 +1,126 @@
+---
+---
+
+<div class="tech-bg">
+  <div class="glow-blob blob-1"></div>
+  <div class="glow-blob blob-2"></div>
+  <div class="glow-blob blob-3"></div>
+  <div class="grid-layer"></div>
+  
+  <svg class="curves-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <path class="animated-line line-1" d="M -10,10 Q 30,80 60,40 T 110,90" fill="none" />
+    <path class="animated-line line-2" d="M -10,50 Q 40,20 70,60 T 110,40" fill="none" />
+    <path class="animated-line line-3" d="M -10,80 Q 20,40 50,70 T 110,20" fill="none" />
+  </svg>
+</div>
+
+<style>
+  .tech-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2;
+    overflow: hidden;
+    background-color: var(--bg-color);
+  }
+
+  .grid-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(to right, var(--text-color) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--text-color) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.04;
+    mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+  }
+
+  /* Reduce opacity of grid on light mode to keep it subtle */
+  :global([data-theme="light"]) .grid-layer {
+    opacity: 0.03;
+  }
+
+  .glow-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.15;
+    animation: drift 20s infinite ease-in-out alternate;
+    transform: translate(-50%, -50%);
+  }
+
+  :global([data-theme="light"]) .glow-blob {
+    opacity: 0.1;
+  }
+
+  .blob-1 {
+    top: 20%;
+    left: 20%;
+    width: 40vw;
+    height: 40vw;
+    background-color: #3b82f6; /* Blue */
+    animation-delay: 0s;
+  }
+
+  .blob-2 {
+    top: 80%;
+    left: 80%;
+    width: 35vw;
+    height: 35vw;
+    background-color: #8b5cf6; /* Purple */
+    animation-delay: -5s;
+  }
+
+  .blob-3 {
+    top: 60%;
+    left: 30%;
+    width: 30vw;
+    height: 30vw;
+    background-color: #10b981; /* Green */
+    animation-delay: -10s;
+  }
+
+  .curves-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  .animated-line {
+    stroke: var(--text-color);
+    stroke-width: 0.2;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: draw 12s linear infinite;
+  }
+
+  .line-1 { animation-delay: 0s; }
+  .line-2 { animation-delay: -4s; stroke-width: 0.15; }
+  .line-3 { animation-delay: -8s; stroke-width: 0.1; }
+
+  @keyframes drift {
+    0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    33% { transform: translate(-45%, -55%) scale(1.1) rotate(10deg); }
+    66% { transform: translate(-55%, -45%) scale(0.9) rotate(-10deg); }
+    100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  }
+
+  @keyframes draw {
+    0% {
+      stroke-dashoffset: 200;
+    }
+    100% {
+      stroke-dashoffset: -200;
+    }
+  }
+</style>

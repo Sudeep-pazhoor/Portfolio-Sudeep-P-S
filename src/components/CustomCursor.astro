@@ -1,0 +1,151 @@
+---
+// CustomCursor.astro
+---
+
+<div class="cursor-dot"></div>
+<div class="cursor-outline"></div>
+
+<style>
+  .cursor-dot,
+  .cursor-outline {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    z-index: 9999;
+    pointer-events: none;
+    mix-blend-mode: difference;
+    background-color: #fff; /* White works well with 'difference' blend mode */
+  }
+
+  .cursor-dot {
+    width: 8px;
+    height: 8px;
+    transition: width 0.3s ease, height 0.3s ease;
+  }
+
+  .cursor-outline {
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: 1px solid #fff;
+    transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease, opacity 0.3s ease;
+  }
+
+  /* Hide default cursor on desktop when component loads */
+  :global(@media (pointer: fine) {
+    html {
+      cursor: none !important;
+    }
+    html * {
+      cursor: none !important;
+    }
+  })
+
+  /* Disable custom cursor on mobile */
+  @media (max-width: 768px) {
+    .cursor-dot,
+    .cursor-outline {
+      display: none !important;
+    }
+    /* Let mobile use standard interaction */
+    :global(html), :global(html *) {
+      cursor: auto !important;
+    }
+  }
+
+  /* Hover states added via JS classes */
+  .cursor-dot.hover {
+    width: 12px;
+    height: 12px;
+  }
+
+  .cursor-outline.hover {
+    width: 60px;
+    height: 60px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: transparent;
+    mix-blend-mode: normal;
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+
+  // Make sure it only runs on the client and is not a mobile device
+  if (typeof window !== 'undefined' && window.matchMedia('(pointer: fine)').matches) {
+    const cursorDot = document.querySelector('.cursor-dot');
+    const cursorOutline = document.querySelector('.cursor-outline');
+
+    window.addEventListener('mousemove', (e) => {
+      const posX = e.clientX;
+      const posY = e.clientY;
+
+      // Dot follows exactly
+      gsap.to(cursorDot, {
+        x: posX,
+        y: posY,
+        duration: 0.1,
+        ease: 'power3.out'
+      });
+
+      // Outline follows with a slight delay
+      gsap.to(cursorOutline, {
+        x: posX,
+        y: posY,
+        duration: 0.5,
+        ease: 'power3.out'
+      });
+    });
+
+    // Add hover effect
+    const interactables = document.querySelectorAll('a, button, input, textarea, select, .pill, .btn');
+    
+    interactables.forEach((el) => {
+      el.addEventListener('mouseenter', () => {
+        cursorDot?.classList.add('hover');
+        cursorOutline?.classList.add('hover');
+      });
+      el.addEventListener('mouseleave', () => {
+        cursorDot?.classList.remove('hover');
+        cursorOutline?.classList.remove('hover');
+      });
+    });
+
+    // Handle dynamically added interactables (like page transitions or lazy loaded lists)
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.addedNodes.length) {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1) { // ELEMENT_NODE
+              const element = node as Element;
+              const isInteractable = element.matches && element.matches('a, button, input, textarea, select, .pill, .btn');
+              const foundInteractables = element.querySelectorAll ? element.querySelectorAll('a, button, input, textarea, select, .pill, .btn') : [];
+              
+              const allInteractables = [];
+              if (isInteractable) allInteractables.push(element);
+              allInteractables.push(...foundInteractables);
+
+              allInteractables.forEach((el) => {
+                el.addEventListener('mouseenter', () => {
+                  cursorDot?.classList.add('hover');
+                  cursorOutline?.classList.add('hover');
+                });
+                el.addEventListener('mouseleave', () => {
+                  cursorDot?.classList.remove('hover');
+                  cursorOutline?.classList.remove('hover');
+                });
+              });
+            }
+          });
+        }
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+</script>

@@ -1,0 +1,82 @@
+---
+import { portfolioData } from '../data/portfolio';
+---
+<section id="about" class="about">
+  <div class="container grid grid-2">
+    <div>
+      <h2 class="text-h2 about-heading">About <br/>Me.</h2>
+    </div>
+    <div>
+      <p class="about-text">{portfolioData.about}</p>
+      
+      <div class="skills-container mt-xl">
+        <h3 class="text-h3 mb-md">Tech Stack</h3>
+        <div class="skills-list">
+          {portfolioData.skills.frontend.map(skill => <span class="pill">{skill}</span>)}
+          {portfolioData.skills.backend.map(skill => <span class="pill">{skill}</span>)}
+          {portfolioData.skills.database.map(skill => <span class="pill">{skill}</span>)}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-text {
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    color: var(--text-color);
+    line-height: 1.6;
+    opacity: 0.8;
+    text-align: justify;
+  }
+  .skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+  .pill {
+    opacity: 0; /* for gsap stagger */
+    transform: translateY(10px);
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import ScrollTrigger from 'gsap/ScrollTrigger';
+  
+  gsap.registerPlugin(ScrollTrigger);
+  
+  gsap.from('.about-heading', {
+    scrollTrigger: {
+      trigger: '.about',
+      start: 'top 80%',
+    },
+    y: 50,
+    opacity: 0,
+    duration: 1,
+    ease: 'power3.out'
+  });
+
+  gsap.from('.about-text', {
+    scrollTrigger: {
+      trigger: '.about-text',
+      start: 'top 85%',
+    },
+    y: 30,
+    opacity: 0,
+    duration: 1,
+    ease: 'power3.out'
+  });
+
+  gsap.to('.pill', {
+    scrollTrigger: {
+      trigger: '.skills-container',
+      start: 'top 85%',
+    },
+    y: 0,
+    opacity: 1,
+    duration: 0.6,
+    stagger: 0.05,
+    ease: 'power2.out'
+  });
+</script>
